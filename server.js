@@ -26,14 +26,14 @@ const logError = (error) => {
 
 const handleRequest = (req, res) => {
   const reqConnector = Connector.fromRequest(req);
-  const connectorReq = reqConnector.request();
-
+  const connectorReqStream = reqConnector.requestStream();
   const partialLogResponse = logResponse.bind(null, req);
+
   reqConnector.on('finish', partialLogResponse);
   reqConnector.on('error', logError);
   reqConnector.pipeTo(res);
 
-  req.pipe(connectorReq);
+  req.pipe(connectorReqStream);
 };
 
 const proxyServer = http.createServer(handleRequest);
